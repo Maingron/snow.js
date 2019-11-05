@@ -10,6 +10,3 @@ To implement it onto a website, just go to the end of your HTML and paste this:
 ```
 
 If you want to be able to configure snow.js, download it and modify the snow.js file. Make sure to link to **your** js file.
-
-
-<script src="snow.js" async></script>
