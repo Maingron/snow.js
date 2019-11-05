@@ -6,7 +6,7 @@ Snow.js spawns snow over your website. Updates will follow. Development started 
 
 To implement it onto a website, just go to the end of your HTML and paste this:
 ```html
-<script src="https://raw.githubusercontent.com/Maingron/snow.js/master/snow.js" async></script>
+<script src="snow.js" async></script>
 ```
 
-If you want to be able to configure snow.js, download it and modify the snow.js file. Make sure to link to **your** js file.
+Make sure to copy snow.js into your website directory and check, if the link is right. If you want to modify the snow, you can do it in the snow.js file.
