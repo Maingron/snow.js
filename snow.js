@@ -71,11 +71,14 @@ function initSnow() {
             addElement(snow.config.snowflakeTagName, snow.config.snowContainer, snow.config.snowflakeClassName);
         }
         snow.elements.snowflakes = document.getElementsByClassName(snow.config.snowflakeClassName);
+
+        for (var i = 0; i < snow.config.maxSnow; i++) {
+            snow.elements.snowflakes[i].top = -round(random(snow.config.initialYDistance));
+        }
     }
 
     for (var i = 0; i < snow.config.maxSnow; i++) {
         snow.elements.snowflakes[i].left = round((window.innerWidth / snow.config.maxSnow) * i); // set initial position left
-        snow.elements.snowflakes[i].top = -round(random(snow.config.initialYDistance));
     }
 }
 
@@ -86,7 +89,7 @@ window.setInterval(function () {
             snow.elements.snowflakes[i].top += round(random(snow.config.gravityAmount));
             snow.elements.snowflakes[i].style.top = snow.elements.snowflakes[i].top + "px";
         } else {
-            snow.elements.snowflakes[i].top = -60;
+            snow.elements.snowflakes[i].top = -140;
         }
         snow.elements.snowflakes[i].left += round(random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2); // add jitter
         snow.elements.snowflakes[i].style.left = snow.elements.snowflakes[i].left + "px";
