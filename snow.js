@@ -21,7 +21,8 @@ snow.config = {
     "cssTransition": 0, //seconds; not recommended
     "snowSizes": ["15px", "20px", "25px","30px","35px","40px","45px"],
     "snowColors": ["#fff","#fff","#fff","#fff","#fff","#fff","#99f","#f99","#edf","#afa"],
-    "snowFont": "Calibri, Jokerman, Arial, Tahoma, sans-serif"
+    "snowFont": "Calibri, Jokerman, Arial, Tahoma, sans-serif",
+    "snowflakeClassName":"s"
 }
 
 if(snow.config.autoFixScriptTag) {
@@ -47,7 +48,7 @@ if(snow.config.autoFixScriptTag) {
 function initSnow() {
     addElement("style", document.body, "snowstyle");
     document.getElementsByClassName("snowstyle")[0].innerHTML = `
-    .asnow {
+    .`+snow.config.snowflakeClassName+` {
         position:fixed;
         display:inline;
         height:0;
@@ -62,9 +63,9 @@ function initSnow() {
     `;
 
     for (var i = 0; i < snow.config.maxSnow; i++) {
-        addElement("i", snow.config.snowContainer, "asnow");
+        addElement("i", snow.config.snowContainer, snow.config.snowflakeClassName);
     }
-    snow.elements.snowflakes = document.getElementsByClassName("asnow");
+    snow.elements.snowflakes = document.getElementsByClassName(snow.config.snowflakeClassName);
 
     for (var i = 0; i < snow.config.maxSnow; i++) {
         snow.elements.snowflakes[i].left = (window.innerWidth / snow.config.maxSnow) * i; // set initial position left
@@ -93,7 +94,7 @@ function addElement(which, where, nclass, nid) {
     which1 = document.createElement(which);
     where = document.body;
     if (nclass) {
-        if (nclass == "asnow") {
+        if (nclass == snow.config.snowflakeClassName) {
             which1.innerHTML = snow.config.snowChars[Math.floor((Math.random() * snow.config.snowChars.length))];
             which1.style.top = 0;
             which1.style.color = snow.config.snowColors[Math.floor((Math.random() * snow.config.snowColors.length))];
