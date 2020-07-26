@@ -10,18 +10,20 @@ data["snow"] = {
 var snow = data["snow"];
 
 snow.config = {
-    "snowContainer": document.body,
     "snowChars": ["*","*","*","+"],
-    "autoFixScriptTag": false, // Recommended: true. If true, make sure the snow.js file is called snow.js or snow.min.js. Might not have a big effect.
-    "tickTime": 25, //ms
-    "maxSnow": window.innerHeight / 8,
+    "tickTime": 25, // ms - time between render steps - low values might vary in browsers
+    "maxSnow": window.innerHeight / 8, // Max amount of snowflakes
     "jitterAmount": 3,
     "gravityAmount": 3,
-    "initialYDistance": window.innerHeight + 80,
-    "cssTransition": 0, //seconds; not recommended
+    "initialYDistance": window.innerHeight + 80, // px
     "snowSizes": ["15px", "20px", "25px","30px","35px","40px","45px"],
     "snowColors": ["#fff","#fff","#fff","#fff","#fff","#fff","#99f","#f99","#edf","#afa"],
-    "snowFont": "Calibri, Jokerman, Arial, Tahoma, sans-serif",
+    "snowFont": "Calibri, Jokerman, Arial, Tahoma, sans-serif", // Uses CSS - If first font is not available, the second one is being used...
+
+    // Advanced settings
+    "snowContainer": document.body,
+    "cssTransition": 0, //seconds; not recommended
+    "autoFixScriptTag": false, // Recommended: true. If true, make sure the snow.js file is called snow.js or snow.min.js. Might not have a big effect.
     "snowflakeTagName": "i",
     "snowflakeClassName":"s"
 }
