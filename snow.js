@@ -11,7 +11,7 @@ var snow = data["snow"];
 
 snow.config = {
     "snowContainer": document.body,
-    "snowChar": "*",
+    "snowChars": ["*","*","*","+"],
     "tickTime": 25, //ms
     "maxSnow": window.innerHeight / 8,
     "jitterAmount": 3,
@@ -23,14 +23,12 @@ snow.config = {
     "snowFont": "Calibri, Jokerman, Arial, Tahoma, sans-serif"
 }
 
-
-
 function addElement(which, where, nclass, nid) {
     which1 = document.createElement(which);
     where = document.body;
     if (nclass) {
         if (nclass == "asnow") {
-            which1.innerHTML = snow.config.snowChar;
+            which1.innerHTML = snow.config.snowChars[Math.floor((Math.random() * snow.config.snowChars.length))];
             which1.style.top = 0;
             which1.style.color = snow.config.snowColors[Math.floor((Math.random() * snow.config.snowColors.length))];
             which1.style.fontSize = snow.config.snowSizes[Math.floor((Math.random() * snow.config.snowSizes.length))];
