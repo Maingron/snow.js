@@ -22,6 +22,7 @@ snow.config = {
     "snowSizes": ["15px", "20px", "25px","30px","35px","40px","45px"],
     "snowColors": ["#fff","#fff","#fff","#fff","#fff","#fff","#99f","#f99","#edf","#afa"],
     "snowFont": "Calibri, Jokerman, Arial, Tahoma, sans-serif",
+    "snowflakeTagName": "i",
     "snowflakeClassName":"s"
 }
 
@@ -63,7 +64,7 @@ function initSnow() {
     `;
 
     for (var i = 0; i < snow.config.maxSnow; i++) {
-        addElement("i", snow.config.snowContainer, snow.config.snowflakeClassName);
+        addElement(snow.config.snowflakeTagName, snow.config.snowContainer, snow.config.snowflakeClassName);
     }
     snow.elements.snowflakes = document.getElementsByClassName(snow.config.snowflakeClassName);
 
