@@ -92,22 +92,22 @@ function initSnow() {
 }
 
 function addElement(which, where, nclass, nid) {
-    which1 = document.createElement(which);
+    which = document.createElement(which);
     where = document.body;
     if (nclass) {
         if (nclass == snow.config.snowflakeClassName) {
-            which1.innerHTML = snow.config.snowChars[Math.floor((Math.random() * snow.config.snowChars.length))];
-            which1.style.top = 0;
-            which1.style.color = snow.config.snowColors[Math.floor((Math.random() * snow.config.snowColors.length))];
-            which1.style.fontSize = snow.config.snowSizes[Math.floor((Math.random() * snow.config.snowSizes.length))];
+            which.innerHTML = snow.config.snowChars[Math.floor((Math.random() * snow.config.snowChars.length))];
+            which.style.top = 0;
+            which.style.color = snow.config.snowColors[Math.floor((Math.random() * snow.config.snowColors.length))];
+            which.style.fontSize = snow.config.snowSizes[Math.floor((Math.random() * snow.config.snowSizes.length))];
         }
-        which1.classList.add(nclass);
+        which.classList.add(nclass);
 
     }
     if (nid) {
-        which1.classList.add(nid);
+        which.classList.add(nid);
     }
-    where.appendChild(which1);
+    where.appendChild(which);
 }
 
 
