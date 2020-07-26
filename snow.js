@@ -1,22 +1,27 @@
-var snow = [];
-snow["data"] = [];
-snow["temp"] = snow["t"] = [];
-snow["objects"] = [];
+if(!data) {
+    var data = d = {};
+}
 
-snow["data"]["parent"] = document.body;
-snow["data"]["snowchar"] = "*";
-snow["data"]["ticktime"] = 25 //ms
-snow["data"]["max_snow"] = window.innerHeight / 8;
-snow["data"]["jitter_amount"] = 3;
-snow["data"]["gravity_amount"] = 3;
-snow["data"]["initial_y_distance"] = window.innerHeight + 80;
-snow["data"]["css_transition"] = 0 //seconds; not recommended
-snow["data"]["snow_size"] = ["15px", "20px", "25px","30px","35px","40px","45px"];
-snow["data"]["snow_color"] = ["#fff","#fff","#fff","#fff","#fff","#fff","#99f","#f99","#edf","#afa"];
-snow["data"]["font_family"] = "Calibri, Jokerman, Arial, Tahoma, sans-serif";
-/**/
+data["snow"] = {
+    "config": {},
+    "data": {},
+    "elements": {}
+}
+var snow = data["snow"];
 
-
+snow.config = {
+    "snowContainer": document.body,
+    "snowChar": "*",
+    "tickTime": 25, //ms
+    "maxSnow": window.innerHeight / 8,
+    "jitterAmount": 3,
+    "gravityAmount": 3,
+    "initialYDistance": window.innerHeight + 80,
+    "cssTransition": 0, //seconds; not recommended
+    "snowSizes": ["15px", "20px", "25px","30px","35px","40px","45px"],
+    "snowColors": ["#fff","#fff","#fff","#fff","#fff","#fff","#99f","#f99","#edf","#afa"],
+    "snowFont": "Calibri, Jokerman, Arial, Tahoma, sans-serif"
+}
 
 
 
@@ -25,10 +30,10 @@ function addElement(which, where, nclass, nid) {
     where = document.body;
     if (nclass) {
         if (nclass == "asnow") {
-            which1.innerHTML = snow["data"]["snowchar"];
+            which1.innerHTML = snow.config.snowChar;
             which1.style.top = 0;
-            which1.style.color = snow["data"]["snow_color"][Math.floor((Math.random() * snow["data"]["snow_color"].length))];
-            which1.style.fontSize = snow["data"]["snow_size"][Math.floor((Math.random() * snow["data"]["snow_size"].length))];
+            which1.style.color = snow.config.snowColors[Math.floor((Math.random() * snow.config.snowColors.length))];
+            which1.style.fontSize = snow.config.snowSizes[Math.floor((Math.random() * snow.config.snowSizes.length))];
         }
         which1.classList.add(nclass);
 
@@ -50,44 +55,38 @@ document.getElementsByClassName("snowstyle")[0].innerHTML = `
     width:0;
     overflow:visible;
     top:-50px;
-    font-family: `+snow["data"]["font_family"]+`;
-    transition :`+snow["data"]["css_transition"]+`s;
+    font-family: `+snow.config.snowFont+`;
+    transition :`+snow.config.cssTransition+`s;
     font-style: normal;
     pointer-events: none;
 }
 `;
 
 
-for (snow["temp"]["snowc"] = 0; snow["temp"]["snowc"] < snow["data"]["max_snow"]; snow["temp"]["snowc"]++) {
+for (var i = 0; i < snow.config.maxSnow; i++) {
     addElement("i", snow["data"]["parent"], "asnow");
 }
-snow["objects"]["snowflakes"] = document.getElementsByClassName("asnow");
+snow.elements.snowflakes = document.getElementsByClassName("asnow");
 
-for (snow["t"]["isnowpos"] = 0; snow["t"]["isnowpos"] < snow["data"]["max_snow"]; snow["t"]["isnowpos"]++) {
-    snow["objects"]["snowflakes"][snow["t"]["isnowpos"]].left = (window.innerWidth / snow["data"]["max_snow"]) * snow["t"]["isnowpos"]; // set initial position left
-    snow["objects"]["snowflakes"][snow["t"]["isnowpos"]].top = -(Math.random() * snow["data"]["initial_y_distance"]);
-
+for (var i = 0; i < snow.config.maxSnow; i++) {
+    snow.elements.snowflakes[i].left = (window.innerWidth / snow.config.maxSnow) * i; // set initial position left
+    snow.elements.snowflakes[i].top = -(Math.random() * snow.config.initialYDistance);
 }
-
-
 
 
 window.setInterval(function () {
 
-    for (snow["t"]["snowtickc"] = 0; snow["t"]["snowtickc"] < snow["objects"]["snowflakes"].length; snow["t"]["snowtickc"]++) {
-        snow["t"]["cticksnow"] = snow["objects"]["snowflakes"][snow["t"]["snowtickc"]];
+    for (var i = 0; i < snow.elements.snowflakes.length; i++) {
+        var j = snow.elements.snowflakes[i];
 
-        if (snow["t"]["cticksnow"].top < window.innerHeight) {
-            snow["t"]["cticksnow"].top = snow["t"]["cticksnow"].top + (Math.random() * snow["data"]["gravity_amount"]);
-            snow["t"]["cticksnow"].style.top = snow["t"]["cticksnow"].top + "px";
+        if (j.top < window.innerHeight) {
+            j.top = j.top + (Math.random() * snow.config.gravityAmount);
+            j.style.top = j.top + "px";
         } else {
-            snow["t"]["cticksnow"].top = -60;
+            j.top = -60;
         }
 
-        
-        snow["t"]["cticksnow"].left = snow["t"]["cticksnow"].left + ((Math.random() * snow["data"]["jitter_amount"]) - (snow["data"]["jitter_amount"] / 2)); // add jittering
-        snow["t"]["cticksnow"].style.left = snow["t"]["cticksnow"].left + "px";
-
-
+        j.left = j.left + ((Math.random() * snow.config.jitterAmount) - (snow.config.jitterAmount / 2)); // add jittering
+        j.style.left = j.left + "px";
     }
-}, snow["data"]["ticktime"]);
+}, snow.config.tickTime);
