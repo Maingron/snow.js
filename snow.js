@@ -70,7 +70,7 @@ function initSnow() {
 
     for (var i = 0; i < snow.config.maxSnow; i++) {
         snow.elements.snowflakes[i].left = (window.innerWidth / snow.config.maxSnow) * i; // set initial position left
-        snow.elements.snowflakes[i].top = -(Math.random() * snow.config.initialYDistance);
+        snow.elements.snowflakes[i].top = -(random(snow.config.initialYDistance));
     }
 
     window.setInterval(function () {
@@ -79,13 +79,13 @@ function initSnow() {
             var j = snow.elements.snowflakes[i];
 
             if (j.top < window.innerHeight) {
-                j.top = j.top + (Math.random() * snow.config.gravityAmount);
+                j.top = j.top + random(snow.config.gravityAmount);
                 j.style.top = j.top + "px";
             } else {
                 j.top = -60;
             }
 
-            j.left = j.left + ((Math.random() * snow.config.jitterAmount) - (snow.config.jitterAmount / 2)); // add jittering
+            j.left = j.left + ((random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2)); // add jittering
             j.style.left = j.left + "px";
         }
     }, snow.config.tickTime);
@@ -96,10 +96,10 @@ function addElement(which, where, nclass, nid) {
     where = document.body;
     if (nclass) {
         if (nclass == snow.config.snowflakeClassName) {
-            which.innerHTML = snow.config.snowChars[Math.floor((Math.random() * snow.config.snowChars.length))];
+            which.innerHTML = snow.config.snowChars[random(snow.config.snowChars.length,1)];
             which.style.top = 0;
-            which.style.color = snow.config.snowColors[Math.floor((Math.random() * snow.config.snowColors.length))];
-            which.style.fontSize = snow.config.snowSizes[Math.floor((Math.random() * snow.config.snowSizes.length))];
+            which.style.color = snow.config.snowColors[random(snow.config.snowColors.length,1)];
+            which.style.fontSize = snow.config.snowSizes[random(snow.config.snowSizes.length,1)];
         }
         which.classList.add(nclass);
 
@@ -108,6 +108,14 @@ function addElement(which, where, nclass, nid) {
         which.classList.add(nid);
     }
     where.appendChild(which);
+}
+
+function random(max,roundType) {
+    if(!roundType) {
+        return((Math.random() * max));
+    } else if(roundType == 1 || roundType == "floor") {
+        return(Math.floor((Math.random() * max)));
+    }
 }
 
 
