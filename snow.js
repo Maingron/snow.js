@@ -64,7 +64,7 @@ document.getElementsByClassName("snowstyle")[0].innerHTML = `
 
 
 for (var i = 0; i < snow.config.maxSnow; i++) {
-    addElement("i", snow["data"]["parent"], "asnow");
+    addElement("i", snow.config.snowContainer, "asnow");
 }
 snow.elements.snowflakes = document.getElementsByClassName("asnow");
 
