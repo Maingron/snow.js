@@ -24,6 +24,7 @@ snow.config = {
     "snowContainer": document.body,
     "cssTransition": 0, //seconds; not recommended
     "autoFixScriptTag": false, // Recommended: true. If true, make sure the snow.js file is called snow.js or snow.min.js. Might not have a big effect.
+    "maxDecimalLength": 1, // 0.123456789
     "snowflakeTagName": "i",
     "snowflakeClassName":"s"
 }
@@ -37,8 +38,8 @@ if(snow.config.autoFixScriptTag) {
                 break;
             }
         }
-
     }
+
     if(!snow.elements.script) {
         console.warn("snow.js is not called snow.js or snow.min.js - snow.config.autoFixScriptTag was ignored and set to false.");
         snow.config.autoFixScriptTag = false;
@@ -71,43 +72,36 @@ function initSnow() {
     snow.elements.snowflakes = document.getElementsByClassName(snow.config.snowflakeClassName);
 
     for (var i = 0; i < snow.config.maxSnow; i++) {
-        snow.elements.snowflakes[i].left = (window.innerWidth / snow.config.maxSnow) * i; // set initial position left
-        snow.elements.snowflakes[i].top = -(random(snow.config.initialYDistance));
+        snow.elements.snowflakes[i].left = round((window.innerWidth / snow.config.maxSnow) * i); // set initial position left
+        snow.elements.snowflakes[i].top = -round(random(snow.config.initialYDistance));
     }
 
+
     window.setInterval(function () {
-
         for (var i = 0; i < snow.elements.snowflakes.length; i++) {
-            var j = snow.elements.snowflakes[i];
-
-            if (j.top < window.innerHeight) {
-                j.top = j.top + random(snow.config.gravityAmount);
-                j.style.top = j.top + "px";
+            if (snow.elements.snowflakes[i].top < window.innerHeight) {
+                snow.elements.snowflakes[i].top += round(random(snow.config.gravityAmount));
+                snow.elements.snowflakes[i].style.top = snow.elements.snowflakes[i].top + "px";
             } else {
-                j.top = -60;
+                snow.elements.snowflakes[i].top = -60;
             }
-
-            j.left = j.left + ((random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2)); // add jittering
-            j.style.left = j.left + "px";
+            snow.elements.snowflakes[i].left += round(random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2); // add jitter
+            snow.elements.snowflakes[i].style.left = snow.elements.snowflakes[i].left + "px";
         }
     }, snow.config.tickTime);
 }
 
-function addElement(which, where, nclass, nid) {
+function addElement(which, where, className) {
     which = document.createElement(which);
     where = document.body;
-    if (nclass) {
-        if (nclass == snow.config.snowflakeClassName) {
+    if (className) {
+        if (className == snow.config.snowflakeClassName) {
             which.innerHTML = snow.config.snowChars[random(snow.config.snowChars.length,1)];
             which.style.top = 0;
             which.style.color = snow.config.snowColors[random(snow.config.snowColors.length,1)];
             which.style.fontSize = snow.config.snowSizes[random(snow.config.snowSizes.length,1)];
         }
-        which.classList.add(nclass);
-
-    }
-    if (nid) {
-        which.classList.add(nid);
+        which.classList.add(className);
     }
     where.appendChild(which);
 }
@@ -118,6 +112,10 @@ function random(max,roundType) {
     } else if(roundType == 1 || roundType == "floor") {
         return(Math.floor((Math.random() * max)));
     }
+}
+
+function round(which) {
+    return(+which.toFixed(snow.config.maxDecimalLength));
 }
 
 
