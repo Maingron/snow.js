@@ -49,47 +49,50 @@ if(snow.config.autoFixScriptTag) {
     }
 }
 
-function initSnow() {
-    addElement("style", document.body, "snowstyle");
-    document.getElementsByClassName("snowstyle")[0].innerHTML = `
-    .`+snow.config.snowflakeClassName+` {
-        position:fixed;
-        display:inline;
-        height:0;
-        width:0;
-        overflow:visible;
-        top:-50px;
-        font-family: `+snow.config.snowFont+`;
-        transition :`+snow.config.cssTransition+`s;
-        font-style: normal;
-        pointer-events: none;
-    }
-    `;
+addElement("style", document.body, "snowstyle");
+document.getElementsByClassName("snowstyle")[0].innerHTML = `
+.`+snow.config.snowflakeClassName+` {
+    position:fixed;
+    display:inline;
+    height:0;
+    width:0;
+    overflow:visible;
+    top:-50px;
+    font-family: `+snow.config.snowFont+`;
+    transition :`+snow.config.cssTransition+`s;
+    font-style: normal;
+    pointer-events: none;
+}
+`;
 
-    for (var i = 0; i < snow.config.maxSnow; i++) {
-        addElement(snow.config.snowflakeTagName, snow.config.snowContainer, snow.config.snowflakeClassName);
+function initSnow() {
+    if(!snow.elements.snowflakes) {
+        for (var i = 0; i < snow.config.maxSnow; i++) {
+            addElement(snow.config.snowflakeTagName, snow.config.snowContainer, snow.config.snowflakeClassName);
+        }
+        snow.elements.snowflakes = document.getElementsByClassName(snow.config.snowflakeClassName);
     }
-    snow.elements.snowflakes = document.getElementsByClassName(snow.config.snowflakeClassName);
 
     for (var i = 0; i < snow.config.maxSnow; i++) {
         snow.elements.snowflakes[i].left = round((window.innerWidth / snow.config.maxSnow) * i); // set initial position left
         snow.elements.snowflakes[i].top = -round(random(snow.config.initialYDistance));
     }
-
-
-    window.setInterval(function () {
-        for (var i = 0; i < snow.elements.snowflakes.length; i++) {
-            if (snow.elements.snowflakes[i].top < window.innerHeight) {
-                snow.elements.snowflakes[i].top += round(random(snow.config.gravityAmount));
-                snow.elements.snowflakes[i].style.top = snow.elements.snowflakes[i].top + "px";
-            } else {
-                snow.elements.snowflakes[i].top = -60;
-            }
-            snow.elements.snowflakes[i].left += round(random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2); // add jitter
-            snow.elements.snowflakes[i].style.left = snow.elements.snowflakes[i].left + "px";
-        }
-    }, snow.config.tickTime);
 }
+
+
+window.setInterval(function () {
+    for (var i = 0; i < snow.elements.snowflakes.length; i++) {
+        if (snow.elements.snowflakes[i].top < window.innerHeight) {
+            snow.elements.snowflakes[i].top += round(random(snow.config.gravityAmount));
+            snow.elements.snowflakes[i].style.top = snow.elements.snowflakes[i].top + "px";
+        } else {
+            snow.elements.snowflakes[i].top = -60;
+        }
+        snow.elements.snowflakes[i].left += round(random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2); // add jitter
+        snow.elements.snowflakes[i].style.left = snow.elements.snowflakes[i].left + "px";
+    }
+}, snow.config.tickTime);
+
 
 function addElement(which, where, className) {
     which = document.createElement(which);
@@ -120,3 +123,7 @@ function round(which) {
 
 
 initSnow();
+
+addEventListener("resize",function() {
+    initSnow();
+})
