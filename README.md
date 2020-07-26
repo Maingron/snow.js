@@ -16,6 +16,15 @@ Recommended code to implement snow.js:
 Make sure to copy snow.js into your website directory and check, if the link is right.<br>
 If you want to modify the snow, you can do that by modifying the config section in snow.js
 
+<br>
+
+# To-do List:
+- [ ] Use Images as snow
+
+
+---
+
 
 Project Website: https://maingron.com/snowjs <br>
 Github Site: https://maingron.com/github/snowjs
+
