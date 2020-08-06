@@ -18,7 +18,20 @@ If you want to modify the snow, you can do that by modifying the config section 
 
 <br>
 
-# To-do List:
+## Configuration options:
+`snowChars`: Defines the characters used as snow  
+`tickTime`: Defines the time between frames in milliseconds  
+`maxSnow`: Defines the amount of snowflakes spawned  
+`jitterAmount`: Defines how jittery the snowflakes are  
+`gravityAmount`: Defines how fast the snowflakes fall down  
+`initialYDistance`: Defines how far apart the snowflakes are spawned initially  
+`snowSizes`: Defines the sizes of the snowflakes  
+`snowColors`: Defines the colors of the snowflakes  
+`snowFont`: Defines the font of the snowflakes (css)  
+
+<br>
+
+## To-do List:
 - [ ] Use Images as snow
 
 
