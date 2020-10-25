@@ -6,6 +6,7 @@
 ehthumbs.db
 Thumbs.db
 prepros-6.config
+prepros.config
 .cache
 .dev*
 .log
