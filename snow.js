@@ -2,16 +2,21 @@ if(!data) {
     var data = d = {};
 }
 
-data["snow"] = {
-    "config": {},
-    "data": {},
-    "elements": {}
+if(!data["snow"]) {
+    data["snow"] = {
+        "config": {},
+        "data": {},
+        "elements": {}
+    }
 }
-var snow = data["snow"];
+
+if(!snow) {
+    var snow = data["snow"];
+}
 
 snow.config = {
     "snowChars": ["*"],
-    "tickTime": 17, // ms - time between render steps - low values might vary in browsers
+    "tickTime": 17, // ms - time between render steps - low values might show varying results in different browsers
     "maxSnow": window.innerHeight / 8, // Max amount of snowflakes
     "jitterAmount": 2,
     "gravityAmount": 3,
@@ -124,8 +129,10 @@ function round(which) {
     return(+which.toFixed(snow.config.maxDecimalLength));
 }
 
+addEventListener("load",function() {
+    initSnow();
+});
 
-initSnow();
 
 addEventListener("resize",function() {
     initSnow();
