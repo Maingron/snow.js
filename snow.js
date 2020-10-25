@@ -20,7 +20,7 @@ snow.config = {
     "maxSnow": window.innerHeight / 8, // Max amount of snowflakes
     "jitterAmount": 2,
     "gravityAmount": 3,
-    "initialYDistance": window.innerHeight + 80, // px
+    "initialYSpacing": window.innerHeight + 80, // px
     "snowSizes": ["20px","25px","35px","40px"],
     "snowColors": ["#fff","#fff","#edf"],
     "snowFont": "'Calibri', 'Arial', 'Tahoma', sans-serif", // Uses CSS - If first font is not available, the second one is being used...
@@ -78,7 +78,7 @@ function initSnow() {
         snow.elements.snowflakes = document.getElementsByClassName(snow.config.snowflakeClassName);
 
         for (var i = 0; i < snow.config.maxSnow; i++) {
-            snow.elements.snowflakes[i].top = -round(random(snow.config.initialYDistance));
+            snow.elements.snowflakes[i].top = -round(random(snow.config.initialYSpacing));
         }
     }
 
