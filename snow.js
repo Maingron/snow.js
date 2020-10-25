@@ -16,14 +16,14 @@ if(!snow) {
 
 snow.config = {
     "snowChars": ["*"],
-    "tickTime": 17, // ms - time between render steps - low values might show varying results in different browsers
+    "tickTime": 16.66, // ms - time between render steps - low values might show varying results in different browsers
     "maxSnow": window.innerHeight / 8, // Max amount of snowflakes
     "jitterAmount": 2,
     "gravityAmount": 3,
     "initialYDistance": window.innerHeight + 80, // px
-    "snowSizes": ["15px", "20px", "25px","30px","35px","40px","45px"],
-    "snowColors": ["#fff","#fff","#fff","#fff","#fff","#fff","#99f","#f99","#edf","#afa"],
-    "snowFont": "Calibri, Arial, Tahoma, 'Comic Sans MS', sans-serif", // Uses CSS - If first font is not available, the second one is being used...
+    "snowSizes": ["20px","25px","35px","40px"],
+    "snowColors": ["#fff","#fff","#edf"],
+    "snowFont": "'Calibri', 'Arial', 'Tahoma', sans-serif", // Uses CSS - If first font is not available, the second one is being used...
 
     // Advanced settings
     "snowContainer": document.body,
