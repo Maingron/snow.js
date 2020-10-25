@@ -20,7 +20,9 @@ snow.config = {
     "maxSnow": window.innerHeight / 8, // Max amount of snowflakes
     "jitterAmount": 2,
     "gravityAmount": 3,
-    "initialYSpacing": window.innerHeight + 80, // px
+    "initialYSpacing": -window.innerHeight - 200, // px - -window.innerHeight makes the snowflakes spawn across the entire screen so they don't need to fall from the top first
+    "topBorder": -100, //px
+    "bottomBorder": window.innerHeight + 100, //px
     "snowSizes": ["20px","25px","35px","40px"],
     "snowColors": ["#fff","#fff","#edf"],
     "snowFont": "'Calibri', 'Arial', 'Tahoma', sans-serif", // Uses CSS - If first font is not available, the second one is being used...
@@ -78,7 +80,7 @@ function initSnow() {
         snow.elements.snowflakes = document.getElementsByClassName(snow.config.snowflakeClassName);
 
         for (var i = 0; i < snow.config.maxSnow; i++) {
-            snow.elements.snowflakes[i].top = -round(random(snow.config.initialYSpacing));
+            snow.elements.snowflakes[i].top = snow.config.topBorder + -round(random(snow.config.initialYSpacing));
         }
     }
 
@@ -90,11 +92,11 @@ function initSnow() {
 
 window.setInterval(function () {
     for (var i = 0; i < snow.elements.snowflakes.length; i++) {
-        if (snow.elements.snowflakes[i].top < window.innerHeight) {
+        if (snow.elements.snowflakes[i].top < snow.config.bottomBorder) {
             snow.elements.snowflakes[i].top += round(random(snow.config.gravityAmount));
             snow.elements.snowflakes[i].style.top = snow.elements.snowflakes[i].top + "px";
         } else {
-            snow.elements.snowflakes[i].top = -140;
+            snow.elements.snowflakes[i].top = snow.config.topBorder;
         }
         snow.elements.snowflakes[i].left += round(random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2); // add jitter
         snow.elements.snowflakes[i].style.left = snow.elements.snowflakes[i].left + "px";
