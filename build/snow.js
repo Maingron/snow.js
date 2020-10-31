@@ -1,3 +1,6 @@
+// snow.js by Maingron (https://maingron.com/snowjs)
+// Licensed under MIT (https://github.com/Maingron/snow.js/blob/master/LICENSE)
+
 if(!data) {
     var data = d = {};
 }
