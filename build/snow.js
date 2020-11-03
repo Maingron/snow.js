@@ -1,4 +1,4 @@
-// snow.js by Maingron (https://maingron.com/snowjs)
+// snow.js 1.2.1 by Maingron (https://maingron.com/snowjs)
 // Licensed under MIT (https://github.com/Maingron/snow.js/blob/master/LICENSE)
 
 if(!data) {
@@ -124,30 +124,31 @@ snow.functions.initSnow = function() {
         for (var i = 0; i < snow.config.maxSnow; i++) {
             snow.elements.snowflakes[i].top = snow.config.topBorder + -snow.functions.round(snow.functions.random(snow.config.initialYSpacing));
         }
+
+        window.setInterval(function () {
+            if(snow.data.prefersReducedMotion.matches) {
+                return; // Don't calculate snow - It's hidden because the user prefers reduced motion
+            }
+
+            for (var i = 0; i < snow.elements.snowflakes.length; i++) {
+                if (snow.elements.snowflakes[i].top < snow.config.bottomBorder) {
+                    snow.elements.snowflakes[i].top += snow.functions.round(snow.functions.random(snow.config.gravityAmount));
+                    snow.elements.snowflakes[i].style.top = snow.elements.snowflakes[i].top + "px";
+                } else {
+                    snow.elements.snowflakes[i].top = snow.config.topBorder;
+                }
+                snow.elements.snowflakes[i].left += snow.functions.round(snow.functions.random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2); // add jitter
+                snow.elements.snowflakes[i].style.left = snow.elements.snowflakes[i].left + "px";
+            }
+        }, snow.config.tickTime);
+
+
     }
 
     for (var i = 0; i < snow.config.maxSnow; i++) {
         snow.elements.snowflakes[i].left = snow.functions.round((window.innerWidth / snow.config.maxSnow) * i); // set initial position left
     }
 }
-
-
-window.setInterval(function () {
-    if(snow.data.prefersReducedMotion.matches) {
-        return; // Don't calculate snow - It's hidden because the user prefers reduced motion
-    }
-
-    for (var i = 0; i < snow.elements.snowflakes.length; i++) {
-        if (snow.elements.snowflakes[i].top < snow.config.bottomBorder) {
-            snow.elements.snowflakes[i].top += snow.functions.round(snow.functions.random(snow.config.gravityAmount));
-            snow.elements.snowflakes[i].style.top = snow.elements.snowflakes[i].top + "px";
-        } else {
-            snow.elements.snowflakes[i].top = snow.config.topBorder;
-        }
-        snow.elements.snowflakes[i].left += snow.functions.round(snow.functions.random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2); // add jitter
-        snow.elements.snowflakes[i].style.left = snow.elements.snowflakes[i].left + "px";
-    }
-}, snow.config.tickTime);
 
 
 addEventListener("load",function() {
