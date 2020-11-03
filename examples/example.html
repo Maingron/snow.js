@@ -10,6 +10,7 @@
     <main>
         <h1>Snow.js by Maingron</h1>
         <p>Hello World, this is some stuff to fill this website so you can test <a href="https://maingron.com/snowjs">snow.js</a>.</p>
+        <span class='hide-motion' style='color:red;'>Snow disabled because media query 'prefers-reduced-motion' is true.</span>
         <h1>Headline 1</h1>
         <h2>Headline 2</h2>
         <h3>Headline 3</h3>
@@ -43,6 +44,16 @@
 
         * {
             color: #fff;
+        }
+
+        .hide-motion {
+            display:none;
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            .hide-motion {
+                display:block;
+            }
         }
 
     </style>

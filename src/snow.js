@@ -39,6 +39,9 @@ snow.config = {
     "snowflakeClassName":"s"
 }
 
+
+snow.data.prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)");
+
 if(snow.config.autoFixScriptTag) {
     snow.elements.scripts = document.getElementsByTagName("script");
     for(var i = 0; snow.elements.scripts.length > i; i++) {
@@ -61,18 +64,24 @@ if(snow.config.autoFixScriptTag) {
 
 addElement("style", document.body, "snowstyle");
 document.getElementsByClassName("snowstyle")[0].innerHTML = `
-.`+snow.config.snowflakeClassName+` {
-    position:fixed;
-    display:inline;
-    height:0;
-    width:0;
-    overflow:visible;
-    top:-50px;
-    font-family: `+snow.config.snowFont+`;
-    transition :`+snow.config.cssTransition+`s;
-    font-style: normal;
-    pointer-events: none;
-}
+    .`+snow.config.snowflakeClassName+` {
+        position:fixed;
+        display:inline;
+        height:0;
+        width:0;
+        overflow:visible;
+        top:-50px;
+        font-family: `+snow.config.snowFont+`;
+        transition :`+snow.config.cssTransition+`s;
+        font-style: normal;
+        pointer-events: none;
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+        .`+snow.config.snowflakeClassName+` {
+            display:none;
+        }
+    }
 `;
 
 function initSnow() {
@@ -94,6 +103,10 @@ function initSnow() {
 
 
 window.setInterval(function () {
+    if(snow.data.prefersReducedMotion.matches) {
+        return; // Don't calculate snow - It's hidden because the user prefers reduced motion
+    }
+
     for (var i = 0; i < snow.elements.snowflakes.length; i++) {
         if (snow.elements.snowflakes[i].top < snow.config.bottomBorder) {
             snow.elements.snowflakes[i].top += round(random(snow.config.gravityAmount));
@@ -140,5 +153,9 @@ addEventListener("load",function() {
 
 
 addEventListener("resize",function() {
+    initSnow();
+})
+
+snow.data.prefersReducedMotion.addEventListener("change",function() {
     initSnow();
 })
