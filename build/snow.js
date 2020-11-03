@@ -2,13 +2,15 @@
 // Licensed under MIT (https://github.com/Maingron/snow.js/blob/master/LICENSE)
 
 if(!data) {
-    var data = d = {};
+    var data = {};
+    var d = data;
 }
 
 if(!data["snow"]) {
     data["snow"] = {
         "config": {},
         "data": {},
+        "functions": {},
         "elements": {}
     }
 }
@@ -40,6 +42,34 @@ snow.config = {
 }
 
 
+snow.functions.addElement = function(which, where, className) {
+    which = document.createElement(which);
+    where = document.body;
+    if (className) {
+        if (className == snow.config.snowflakeClassName) {
+            which.innerHTML = snow.config.snowChars[snow.functions.random(snow.config.snowChars.length,1)];
+            which.style.top = 0;
+            which.style.color = snow.config.snowColors[snow.functions.random(snow.config.snowColors.length,1)];
+            which.style.fontSize = snow.config.snowSizes[snow.functions.random(snow.config.snowSizes.length,1)];
+        }
+        which.classList.add(className);
+    }
+    where.appendChild(which);
+}
+
+snow.functions.random = function(max,roundType) {
+    if(!roundType) {
+        return((Math.random() * max));
+    } else if(roundType == 1 || roundType == "floor") {
+        return(Math.floor((Math.random() * max)));
+    }
+}
+
+snow.functions.round = function(which) {
+    return(+which.toFixed(snow.config.maxDecimalLength));
+}
+
+
 snow.data.prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)");
 
 if(snow.config.autoFixScriptTag) {
@@ -62,7 +92,7 @@ if(snow.config.autoFixScriptTag) {
     }
 }
 
-addElement("style", document.body, "snowstyle");
+snow.functions.addElement("style", document.body, "snowstyle");
 document.getElementsByClassName("snowstyle")[0].innerHTML = `
     .`+snow.config.snowflakeClassName+` {
         position:fixed;
@@ -84,20 +114,20 @@ document.getElementsByClassName("snowstyle")[0].innerHTML = `
     }
 `;
 
-function initSnow() {
+snow.functions.initSnow = function() {
     if(!snow.elements.snowflakes) {
         for (var i = 0; i < snow.config.maxSnow; i++) {
-            addElement(snow.config.snowflakeTagName, snow.config.snowContainer, snow.config.snowflakeClassName);
+            snow.functions.addElement(snow.config.snowflakeTagName, snow.config.snowContainer, snow.config.snowflakeClassName);
         }
         snow.elements.snowflakes = document.getElementsByClassName(snow.config.snowflakeClassName);
 
         for (var i = 0; i < snow.config.maxSnow; i++) {
-            snow.elements.snowflakes[i].top = snow.config.topBorder + -round(random(snow.config.initialYSpacing));
+            snow.elements.snowflakes[i].top = snow.config.topBorder + -snow.functions.round(snow.functions.random(snow.config.initialYSpacing));
         }
     }
 
     for (var i = 0; i < snow.config.maxSnow; i++) {
-        snow.elements.snowflakes[i].left = round((window.innerWidth / snow.config.maxSnow) * i); // set initial position left
+        snow.elements.snowflakes[i].left = snow.functions.round((window.innerWidth / snow.config.maxSnow) * i); // set initial position left
     }
 }
 
@@ -109,53 +139,25 @@ window.setInterval(function () {
 
     for (var i = 0; i < snow.elements.snowflakes.length; i++) {
         if (snow.elements.snowflakes[i].top < snow.config.bottomBorder) {
-            snow.elements.snowflakes[i].top += round(random(snow.config.gravityAmount));
+            snow.elements.snowflakes[i].top += snow.functions.round(snow.functions.random(snow.config.gravityAmount));
             snow.elements.snowflakes[i].style.top = snow.elements.snowflakes[i].top + "px";
         } else {
             snow.elements.snowflakes[i].top = snow.config.topBorder;
         }
-        snow.elements.snowflakes[i].left += round(random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2); // add jitter
+        snow.elements.snowflakes[i].left += snow.functions.round(snow.functions.random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2); // add jitter
         snow.elements.snowflakes[i].style.left = snow.elements.snowflakes[i].left + "px";
     }
 }, snow.config.tickTime);
 
 
-function addElement(which, where, className) {
-    which = document.createElement(which);
-    where = document.body;
-    if (className) {
-        if (className == snow.config.snowflakeClassName) {
-            which.innerHTML = snow.config.snowChars[random(snow.config.snowChars.length,1)];
-            which.style.top = 0;
-            which.style.color = snow.config.snowColors[random(snow.config.snowColors.length,1)];
-            which.style.fontSize = snow.config.snowSizes[random(snow.config.snowSizes.length,1)];
-        }
-        which.classList.add(className);
-    }
-    where.appendChild(which);
-}
-
-function random(max,roundType) {
-    if(!roundType) {
-        return((Math.random() * max));
-    } else if(roundType == 1 || roundType == "floor") {
-        return(Math.floor((Math.random() * max)));
-    }
-}
-
-function round(which) {
-    return(+which.toFixed(snow.config.maxDecimalLength));
-}
-
 addEventListener("load",function() {
-    initSnow();
+    snow.functions.initSnow();
 });
 
-
 addEventListener("resize",function() {
-    initSnow();
-})
+    snow.functions.initSnow();
+});
 
 snow.data.prefersReducedMotion.addEventListener("change",function() {
-    initSnow();
-})
+    snow.functions.initSnow();
+});
