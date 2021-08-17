@@ -1,6 +1,6 @@
 # Snow.js
 
-
+[![Maintainability](https://api.codeclimate.com/v1/badges/c924aab9d145fafea276/maintainability)](https://codeclimate.com/github/Maingron/snow.js/maintainability)
 
 ## Table of contents
 - [About snow.js](#about-snowjs)
