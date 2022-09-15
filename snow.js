@@ -1,4 +1,4 @@
-// snow.js 1.2.1 by Maingron (https://maingron.com/snowjs)
+// snow.js 1.1-dev by Maingron (https://maingron.com/snowjs)
 // Licensed under MIT (https://github.com/Maingron/snow.js/blob/master/LICENSE)
 
 if(!data) {
@@ -131,14 +131,7 @@ snow.functions.initSnow = function() {
             }
 
             for (var i = 0; i < snow.elements.snowflakes.length; i++) {
-                if (snow.elements.snowflakes[i].top < snow.config.bottomBorder) {
-                    snow.elements.snowflakes[i].top += snow.functions.round(snow.functions.random(snow.config.gravityAmount));
-                    snow.elements.snowflakes[i].style.top = snow.elements.snowflakes[i].top + "px";
-                } else {
-                    snow.elements.snowflakes[i].top = snow.config.topBorder;
-                }
-                snow.elements.snowflakes[i].left += snow.functions.round(snow.functions.random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2); // add jitter
-                snow.elements.snowflakes[i].style.left = snow.elements.snowflakes[i].left + "px";
+                tpSnowFlake(snow.elements.snowflakes[i]);
             }
         }, snow.config.tickTime);
 
@@ -150,6 +143,29 @@ snow.functions.initSnow = function() {
     }
 }
 
+function tpSnowFlake(which) {
+    // TP if out of bounds
+    if(snow.config.gravityAmount < 0) { // Gravity is negative
+        if (which.top < snow.config.topBorder) {
+            which.top = snow.config.bottomBorder;
+        }
+
+    } else if(snow.config.gravityAmount > 0) { // Gravity is positive
+        if(which.top > snow.config.bottomBorder) {
+            which.top = snow.config.topBorder;
+        }
+    }
+
+
+    // Do gravity
+    which.top += snow.functions.round(snow.functions.random(snow.config.gravityAmount));
+    which.style.top = which.top + "px";
+
+
+    // Do jitter
+    which.left += snow.functions.round(snow.functions.random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2);
+    which.style.left = which.left + "px";
+}
 
 addEventListener("load",function() {
     snow.functions.initSnow();
