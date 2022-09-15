@@ -1,4 +1,4 @@
-// snow.js 1.1-dev by Maingron (https://maingron.com/snowjs)
+// snow.js 1.3-dev by Maingron (https://maingron.com/snowjs)
 // Licensed under MIT (https://github.com/Maingron/snow.js/blob/master/LICENSE)
 
 if(!data) {
