@@ -1,65 +1,141 @@
 // snow.js 2.0-dev by Maingron (https://maingron.com/snowjs)
 // Licensed under MIT (https://github.com/Maingron/snow.js/blob/master/LICENSE)
 
+// Snow.js is a JavaScript library for creating snow effects on web pages.
+// It is designed to be lightweight and easy to use.
+
+// snow.js config object
+
 (function() {
+    const config = {
+        // Basic settings
+        snowChars: ["*"],
+        tickTime: (1000/60), // ms - time between render steps - low values might show varying results in different browsers
+        maxSnow: window.innerHeight / 8, // Max amount of snowflakes
+        jitterAmount: 2,
+        gravityAmount: 3,
+        initialYSpacing: -window.innerHeight - 200, // px - -window.innerHeight makes the snowflakes spawn across the entire screen so they don't need to fall from the top first
+        offsetTop: -100, //px
+        offsetBottom: 100, //px
+        snowSizes: ["20px","25px","35px","40px"],
+        snowColors: ["#fff","#fff","#edf"],
+        snowFont: "'Calibri', 'Arial', 'Tahoma', sans-serif", // Uses CSS - If first font is not available, the second one is being used...
+    
+        // Advanced settings
+        snowContainer: document.body,
+        cssTransition: 0, // seconds; not recommended
+        autoFixScriptTag: false, // Recommended: true. If true, make sure the snow.js file is called snow.js or snow.min.js. Might not have a big effect.
+        maxDecimalLength: 1, // 0.123456789
+        snowflakeTagName: "i",
+        snowflakeClassName:"s"
+    };
 
-    if(!data) {
-        var data = {};
-        var d = data;
-    }
 
-    if(!data["snow"]) {
-        data["snow"] = {
-            "config": {},
-            "data": {},
-            "functions": {},
-            "elements": {}
+
+    var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)"); // check if user prefers reduced motion
+
+    var snowflakes = [];
+
+    if(config.autoFixScriptTag) {
+        var scriptElementsOnPage = document.getElementsByTagName("script");
+        var scriptElementOfSnowjs = undefined;
+        for(var i = 0; scriptElementsOnPage.length > i; i++) {
+            if(scriptElementsOnPage[i] && scriptElementsOnPage[i].getAttribute("src")) {
+                if(scriptElementsOnPage[i].getAttribute("src").indexOf("snow.js") > -1 || scriptElementsOnPage[i].getAttribute("src").indexOf("snow.minjs") > -1) {
+                    scriptElementOfSnowjs = scriptElementsOnPage[i];
+                    break;
+                }
+            }
+        }
+
+        if(!scriptElementOfSnowjs) {
+            console.warn("snow.js is not called snow.js or snow.min.js - config.autoFixScriptTag was ignored and set to false.");
+            config.autoFixScriptTag = false;
+        } else {
+            scriptElementOfSnowjs.setAttribute("async",true);
+            scriptElementOfSnowjs.setAttribute("charset","UTF-8");
         }
     }
 
-    if(!snow) {
-        var snow = data["snow"];
+
+    // style snow
+
+    addElement("style", document.body, "snowstyle");
+    document.getElementsByClassName("snowstyle")[0].innerHTML = `
+        .`+config.snowflakeClassName+` {
+            position:fixed;
+            display:inline;
+            height:0;
+            width:0;
+            overflow:visible;
+            top:-50px;
+            font-family: `+config.snowFont+`;
+            transition :`+config.cssTransition+`s;
+            font-style: normal;
+            pointer-events: none;
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            .`+config.snowflakeClassName+` {
+                display:none;
+            }
+        }
+    `;
+
+
+
+    // Functions
+
+
+    function initSnow() {
+        if(snowflakes == 0) { // if not already initialized
+            for (var i = 0; i < config.maxSnow; i++) {
+                // create and index snowflakes
+                snowflakes[i] = addElement(config.snowflakeTagName, config.snowContainer, config.snowflakeClassName);
+            }
+
+            for (var i = 0; i < config.maxSnow; i++) {
+                snowflakes[i].top = 0 + config.offsetTop + -snowRound(snowRandom(config.initialYSpacing));
+            }
+
+            window.setInterval(function () {
+                if(prefersReducedMotion.matches) {
+                    return; // Don't calculate snow - It's hidden because the user prefers reduced motion
+                }
+
+                for (var i = 0; i < snowflakes.length; i++) {
+                    tpSnowFlake(snowflakes[i]);
+                }
+            }, config.tickTime);
+        }
+
+        for (var i = 0; i < config.maxSnow; i++) {
+            snowflakes[i].left = snowRound((window.innerWidth / config.maxSnow) * i); // set initial position left
+        }
     }
 
-    snow.config = {
-        "snowChars": ["*"],
-        "tickTime": 16.66, // ms - time between render steps - low values might show varying results in different browsers
-        "maxSnow": window.innerHeight / 8, // Max amount of snowflakes
-        "jitterAmount": 2,
-        "gravityAmount": -3,
-        "initialYSpacing": -window.innerHeight - 200, // px - -window.innerHeight makes the snowflakes spawn across the entire screen so they don't need to fall from the top first
-        "topBorder": -100, //px
-        "bottomBorder": window.innerHeight + 100, //px
-        "snowSizes": ["20px","25px","35px","40px"],
-        "snowColors": ["#fff","#fff","#edf"],
-        "snowFont": "'Calibri', 'Arial', 'Tahoma', sans-serif", // Uses CSS - If first font is not available, the second one is being used...
 
-        // Advanced settings
-        "snowContainer": document.body,
-        "cssTransition": 0, //seconds; not recommended
-        "autoFixScriptTag": false, // Recommended: true. If true, make sure the snow.js file is called snow.js or snow.min.js. Might not have a big effect.
-        "maxDecimalLength": 1, // 0.123456789
-        "snowflakeTagName": "i",
-        "snowflakeClassName":"s"
-    }
-
-
-    snow.functions.addElement = function(which, where, className) {
+    function addElement(which, where, className) {
         which = document.createElement(which);
         where = document.body;
         if (className) {
-            if (className == snow.config.snowflakeClassName) {
-                which.innerHTML = snow.config.snowChars[snow.functions.random(snow.config.snowChars.length,1)];
+            if (className == config.snowflakeClassName) {
+                which.innerHTML = config.snowChars[snowRandom(config.snowChars.length,1)];
                 which.style.top = 0;
-                which.style.color = snow.config.snowColors[snow.functions.random(snow.config.snowColors.length,1)];
-                which.style.fontSize = snow.config.snowSizes[snow.functions.random(snow.config.snowSizes.length,1)];
+                which.style.color = config.snowColors[snowRandom(config.snowColors.length,1)];
+                which.style.fontSize = config.snowSizes[snowRandom(config.snowSizes.length,1)];
             }
             which.classList.add(className);
         }
         where.appendChild(which);
+
+        which.top = config.top
+
+        return which;
     }
 
-    snow.functions.random = function(max,roundType) {
+
+    function snowRandom(max,roundType) {
         if(!roundType) {
             return((Math.random() * max));
         } else if(roundType == 1 || roundType == "floor") {
@@ -67,105 +143,31 @@
         }
     }
 
-    snow.functions.round = function(which) {
-        return(+which.toFixed(snow.config.maxDecimalLength));
+
+    function snowRound(which) {
+        return(+which.toFixed(config.maxDecimalLength));
     }
 
-
-    snow.data.prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)");
-
-    if(snow.config.autoFixScriptTag) {
-        snow.elements.scripts = document.getElementsByTagName("script");
-        for(var i = 0; snow.elements.scripts.length > i; i++) {
-            if(snow.elements.scripts[i] && snow.elements.scripts[i].getAttribute("src")) {
-                if(snow.elements.scripts[i].getAttribute("src").indexOf("snow.js") > -1 || snow.elements.scripts[i].getAttribute("src").indexOf("snow.minjs") > -1) {
-                    snow.elements.script = snow.elements.snowScript = snow.elements.scripts[i];
-                    break;
-                }
-            }
-        }
-
-        if(!snow.elements.script) {
-            console.warn("snow.js is not called snow.js or snow.min.js - snow.config.autoFixScriptTag was ignored and set to false.");
-            snow.config.autoFixScriptTag = false;
-        } else {
-            snow.elements.script.setAttribute("async",true);
-            snow.elements.script.setAttribute("charset","UTF-8");
-        }
-    }
-
-    snow.functions.addElement("style", document.body, "snowstyle");
-    document.getElementsByClassName("snowstyle")[0].innerHTML = `
-        .`+snow.config.snowflakeClassName+` {
-            position:fixed;
-            display:inline;
-            height:0;
-            width:0;
-            overflow:visible;
-            top:-50px;
-            font-family: `+snow.config.snowFont+`;
-            transition :`+snow.config.cssTransition+`s;
-            font-style: normal;
-            pointer-events: none;
-        }
-
-        @media(prefers-reduced-motion:reduce) {
-            .`+snow.config.snowflakeClassName+` {
-                display:none;
-            }
-        }
-    `;
-
-    snow.functions.initSnow = function() {
-        if(!snow.elements.snowflakes) {
-            for (var i = 0; i < snow.config.maxSnow; i++) {
-                snow.functions.addElement(snow.config.snowflakeTagName, snow.config.snowContainer, snow.config.snowflakeClassName);
-            }
-            snow.elements.snowflakes = document.getElementsByClassName(snow.config.snowflakeClassName);
-
-            for (var i = 0; i < snow.config.maxSnow; i++) {
-                snow.elements.snowflakes[i].top = snow.config.topBorder + -snow.functions.round(snow.functions.random(snow.config.initialYSpacing));
-            }
-
-            window.setInterval(function () {
-                if(snow.data.prefersReducedMotion.matches) {
-                    return; // Don't calculate snow - It's hidden because the user prefers reduced motion
-                }
-
-                for (var i = 0; i < snow.elements.snowflakes.length; i++) {
-                    tpSnowFlake(snow.elements.snowflakes[i]);
-                }
-            }, snow.config.tickTime);
-
-
-        }
-
-        for (var i = 0; i < snow.config.maxSnow; i++) {
-            snow.elements.snowflakes[i].left = snow.functions.round((window.innerWidth / snow.config.maxSnow) * i); // set initial position left
-        }
-    }
 
     function tpSnowFlake(which) {
         // TP if out of bounds
-        if(snow.config.gravityAmount < 0) { // Gravity is negative
-            if (which.top < snow.config.topBorder) {
-                which.top = snow.config.bottomBorder;
+        if(config.gravityAmount < 0) { // Gravity is negative
+            if (which.top < 0 + config.offsetTop) {
+                which.top = window.innerHeight + config.offsetBottom;
             }
 
-        } else if(snow.config.gravityAmount > 0) { // Gravity is positive
-            if(which.top > snow.config.bottomBorder) {
-                which.top = snow.config.topBorder;
+        } else if(config.gravityAmount > 0) { // Gravity is positive
+            if(which.top > window.innerHeight + config.offsetBottom) {
+                which.top = 0 + config.offsetTop;
             }
         }
 
-
         // Do gravity
-        which.top += snow.functions.round(snow.functions.random(snow.config.gravityAmount));
+        which.top += snowRound(snowRandom(config.gravityAmount));
         which.style.top = which.top + "px";
 
-
         // Do jitter
-        which.left += snow.functions.round(snow.functions.random(snow.config.jitterAmount)) - (snow.config.jitterAmount / 2);
+        which.left += snowRound(snowRandom(config.jitterAmount)) - (config.jitterAmount / 2);
         which.style.left = which.left + "px";
     }
 
@@ -174,14 +176,14 @@
     // add event listeners
 
     addEventListener("load",function() {
-        snow.functions.initSnow();
+        initSnow();
     });
 
     addEventListener("resize",function() {
-        snow.functions.initSnow();
+        initSnow();
     });
 
-    snow.data.prefersReducedMotion.addEventListener("change",function() {
-        snow.functions.initSnow();
+    prefersReducedMotion.addEventListener("change",function() {
+        initSnow();
     });
 })();
