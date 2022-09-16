@@ -63,22 +63,22 @@
 
     addElement("style", document.body, "snowstyle");
     document.getElementsByClassName("snowstyle")[0].innerHTML = `
-        .`+config.snowflakeClassName+` {
+        .${config.snowflakeClassName} {
             position:fixed;
             display:inline;
             height:0;
             width:0;
             overflow:visible;
             top:-50px;
-            font-family: `+config.snowFont+`;
-            transition :`+config.cssTransition+`s;
-            opacity: `+config.snowOpacity+`;
+            font-family: ${config.snowFont};
+            transition : ${config.cssTransition}s;
+            opacity: ${config.snowOpacity};
             font-style: normal;
             pointer-events: none;
         }
 
         @media(prefers-reduced-motion:reduce) {
-            .`+config.snowflakeClassName+` {
+            .${config.snowflakeClassName} {
                 display:none;
             }
         }
