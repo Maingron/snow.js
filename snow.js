@@ -10,6 +10,7 @@
     const config = {
         // Basic settings
         snowChars: ["*"],
+        snowOpacity: 0.75,
         tickTime: (1000/60), // ms - time between render steps - low values might show varying results in different browsers
         maxSnow: window.innerHeight / 8, // Max amount of snowflakes
         jitterAmount: 2,
@@ -71,6 +72,7 @@
             top:-50px;
             font-family: `+config.snowFont+`;
             transition :`+config.cssTransition+`s;
+            opacity: `+config.snowOpacity+`;
             font-style: normal;
             pointer-events: none;
         }
