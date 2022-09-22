@@ -20,7 +20,7 @@
         offsetBottom: 100, //px
         snowSizes: ["20px","25px","35px","40px"],
         snowColors: ["#fff","#fff","#edf"],
-        snowFont: "'Calibri', 'Arial', 'Tahoma', sans-serif", // Uses CSS - If first font is not available, the second one is being used...
+        snowFont: "inherit", // CSS - Uses the same font as the parent container by default - alternative example: "'Tahoma', 'Arial', sans-serif"
     
         // Advanced settings
         snowContainer: document.body,
