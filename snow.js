@@ -32,8 +32,6 @@
         snowflakeClassName:"s" // [string] Class name of snowflakes (default: "s") (e.g. "s", "snowflake", "snow") (shorter class names are recommended)
     };
 
-
-
     let prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)"); // check if user prefers reduced motion
 
     let snowflakes = [];
@@ -110,13 +108,7 @@
 
                 // snow tick //
                 window.setInterval(function () {
-                    if(!config.enable) {
-                        return; // Don't calculate snow - either disabled by config or user prefers reduced motion
-                    }
-
-                    for (var i = 0; i < snowflakes.length; i++) {
-                        tpSnowFlake(snowflakes[i]);
-                    }
+                    tickSnow();
                 }, config.tickTime);
             }
 
@@ -125,6 +117,25 @@
             }
         } else {
             // snow is disabled by config
+        }
+    }
+
+    function tickSnow() {
+        if(!config.enable) {
+            return; // Don't calculate snow - either disabled by config or user prefers reduced motion
+        }
+
+        for (which of snowflakes) {
+            // TP if out of bounds
+            tpSnowFlake(which);
+
+            // Do gravity
+            which.top += snowRound(snowRandom(config.gravityAmount));
+            which.style.top = which.top + "px";
+    
+            // Do jitter
+            which.left += snowRound(snowRandom(config.jitterAmount)) - (config.jitterAmount / 2);
+            which.style.left = which.left + "px";
         }
     }
 
@@ -143,7 +154,7 @@
         }
         where.appendChild(which);
 
-        which.top = config.top
+        which.top = config.top;
 
         return which;
     }
@@ -151,9 +162,9 @@
 
     function snowRandom(max,roundType) {
         if(!roundType) {
-            return((Math.random() * max));
+            return(Math.random() * max);
         } else if(roundType == 1 || roundType == "floor") {
-            return(Math.floor((Math.random() * max)));
+            return(Math.floor(Math.random() * max));
         }
     }
 
@@ -163,26 +174,21 @@
     }
 
 
-    function tpSnowFlake(which) {
-        // TP if out of bounds
-        if(config.gravityAmount < 0) { // Gravity is negative
+    // function tpSnowFlake
+    // Teleports snowflakes to the other end of the screen if they are out of bounds
+    // we do this like this to have a more efficient tick function - the gravity won't ever change
+    if(config.gravityAmount < 0) { // if gravity is negative
+        function tpSnowFlake(which) {
             if (which.top < 0 + config.offsetTop) {
                 which.top = window.innerHeight + config.offsetBottom;
             }
-
-        } else if(config.gravityAmount > 0) { // Gravity is positive
+        }
+    } else { // if gravity is positive
+        function tpSnowFlake(which) {
             if(which.top > window.innerHeight + config.offsetBottom) {
                 which.top = 0 + config.offsetTop;
             }
         }
-
-        // Do gravity
-        which.top += snowRound(snowRandom(config.gravityAmount));
-        which.style.top = which.top + "px";
-
-        // Do jitter
-        which.left += snowRound(snowRandom(config.jitterAmount)) - (config.jitterAmount / 2);
-        which.style.left = which.left + "px";
     }
 
 
@@ -198,6 +204,7 @@
     });
 
     prefersReducedMotion.addEventListener("change",function() {
+        // things happen if user changes preference
         if(prefersReducedMotion.matches) {
             config.enable = false;
         } else {
