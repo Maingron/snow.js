@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="../logo.png">
+    <meta name="author" content="Maingron">
     <title>Snow.js by Maingron - Example.html</title>
 </head>
 
 <body>
     <main>
         <h1>Snow.js by Maingron</h1>
-        <p>Hello World, this is some stuff to fill this website so you can test <a href="https://maingron.com/snowjs">snow.js</a>.</p>
+        <p>Hello World, this is some text to fill this website so you can test <a href="https://maingron.com/snowjs">snow.js</a>.</p>
+        <p>lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel enim id lorem tincidunt ornare.</p>
         <span class='hide-motion' style='color:red;'>Snow disabled because media query 'prefers-reduced-motion' is true.</span>
         <h1>Headline 1</h1>
         <h2>Headline 2</h2>
@@ -28,6 +31,9 @@
             width:100vw;
             overflow-x:hidden;
             display:flex;
+            font-family: system-ui, -apple-system, 'Helvetica Neue', 'Helvetica', 'Segoe UI', 'Segoe UI Variable', 'Roboto', 'Tahoma', 'Ubuntu', sans-serif;
+            color-scheme: dark;
+            color: #fff;
         }
 
         main {
@@ -36,14 +42,9 @@
             width:1200px;
             margin: 0 auto;
             outline: 1px solid #fff;
-            font-family: "Tahoma", sans-serif;
             min-height:100vh;
             padding:20px 20px 0 20px;
             box-sizing: border-box;
-        }
-
-        * {
-            color: #fff;
         }
 
         .hide-motion {
@@ -62,7 +63,14 @@
         document.getElementsByTagName("main")[0].innerHTML += document.getElementsByTagName("main")[0].innerHTML;
         document.getElementsByTagName("main")[0].innerHTML += document.getElementsByTagName("main")[0].innerHTML;
 
-        document.getElementsByTagName("main")[0].innerHTML += "<footer style='text-align:right; opacity:.5; border-top:1px solid #fff;'><p>Snow.js by Maingron - <a href='https://maingron.com'>Maingron.com</a></p></footer>";
+        document.getElementsByTagName("main")[0].innerHTML += `
+        <footer style='text-align:right; opacity:.5; border-top:1px solid #fff;'>
+            <p>
+                Snow.js by Maingron - <a href='https://maingron.com'>Maingron.com</a>
+                |
+                <a href='https://maingron.com/github/snowjs'>Github</a>
+            </p>
+        </footer>`;
 
     </script>
 </body>
