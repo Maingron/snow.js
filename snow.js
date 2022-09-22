@@ -20,7 +20,7 @@
         offsetTop: -100, // [number] Offset top in px for snowflakes (default: -100)
         offsetBottom: 100, // [number] Offset bottom in px for snowflakes (default: 100)
         snowSizes: ["20px","25px","35px","40px"], // [array] Sizes of snowflakes (default: ["20px","25px","35px","40px"])
-        snowColors: ["#fff","#fff","#edf"], // [array] Colors of snowflakes (default: ["#fff","#fff","#edf"])
+        snowColors: ["#ccc","#fff","#edf"], // [array] Colors of snowflakes (default: ["#ccc","#fff","#edf"])
         snowFont: "inherit", // [string] (CSS) Font of snowflakes (default: "inherit") (e.g. "Arial", "Times New Roman", sans-serif)
     
         // Advanced and experimental settings
