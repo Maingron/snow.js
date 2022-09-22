@@ -10,6 +10,7 @@
     let config = {
         // Basic settings
         enable: true, // [boolean] Enable snow (default: true)
+        preset : "none", // [string] Preset (default: "none")
         snowChars: ["*"], // [array] Characters to use for snowflakes (default:["*"]) (e.g. ["*", "❅", "❆"])
         snowOpacity: 0.75, // [number 0-1] Opacity of snowflakes (default:0.75) (0 = transparent, 1 = opaque)
         tickTime: (1000/60), // [number] Time between each tick in milliseconds (default: 1000/60) (higher = slower) (1000/60 = 60fps; 1000/30 = 30fps)
@@ -32,9 +33,51 @@
         snowflakeClassName:"s" // [string] Class name of snowflakes (default: "s") (e.g. "s", "snowflake", "snow") (shorter class names are recommended)
     };
 
+    // PRESETS //
+    let presets = {
+        "none": {},
+        "halloween": {
+            snowChars: ["🎃", "👻", "🎃", "👻", "🦇", "🧟", "🧛"],
+            // snowChars: ["🎃", "👻", "🎃", "👻", "🦇", "🕷", "🕸", "🧟", "🧛"],
+            gravityAmount: -.5,
+            jitterAmount: 6,
+            snowOpacity: .15,
+            maxSnow: 80,
+            snowSizes: ["50px", "60px", "70px", "80px"]
+        },
+        "christmas": {
+            snowChars: ["❅", "❆", "❄","🎄", "🎅", "🎁", "🦌"],
+            snowOpacity: 0.75,
+            jitterAmount: 2,
+            gravityAmount: 3,
+            snowSizes: ["20px","25px","35px","40px"],
+            snowColors: ["#ccc","#fff","#edf"],
+            maxSnow: window.innerHeight / 16
+        },
+        "newyear": {
+            snowChars: ["*","*","*","*",new Date().getFullYear()],
+            snowOpacity: 0.75,
+            jitterAmount: .5,
+            gravityAmount: -30,
+            maxSnow: 30,
+            snowColors: ["purple","red","green","blue","yellow"],
+        },
+        "winter": {
+            snowChars: ["❅", "❆", "❄", "☃", "⛄"],
+            snowOpacity: 0.75,
+            jitterAmount: 2,
+            gravityAmount: 3,
+            snowColors: ["#ccc","#fff","#edf"]
+        }
+    };
+
     let prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)"); // check if user prefers reduced motion
 
     let snowflakes = [];
+
+    if(config.preset !== "none") {
+        config = Object.assign(config, presets[config.preset]);
+    }
 
     if(config.autoFixScriptTag) {
         var scriptElementsOnPage = document.getElementsByTagName("script");
