@@ -1,4 +1,4 @@
-// snow.js 2.0.0 by Maingron (https://maingron.com/snowjs)
+// snow.js 2.1.0-dev by Maingron (https://maingron.com/snowjs)
 // Licensed under MIT (https://github.com/Maingron/snow.js/blob/master/LICENSE)
 
 // Snow.js is a standalone JavaScript library for creating snow effects on web pages.
