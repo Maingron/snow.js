@@ -7,8 +7,9 @@
 
 (function() {
     // CONFIGURATION //
-    const config = {
+    let config = {
         // Basic settings
+        enable: true, // [boolean] Enable snow (default: true)
         snowChars: ["*"], // [array] Characters to use for snowflakes (default:["*"]) (e.g. ["*", "❅", "❆"])
         snowOpacity: 0.75, // [number 0-1] Opacity of snowflakes (default:0.75) (0 = transparent, 1 = opaque)
         tickTime: (1000/60), // [number] Time between each tick in milliseconds (default: 1000/60) (higher = slower) (1000/60 = 60fps; 1000/30 = 30fps)
@@ -90,29 +91,40 @@
 
 
     function initSnow() {
-        if(snowflakes == 0) { // if not already initialized
-            for (var i = 0; i < config.maxSnow; i++) {
-                // create and index snowflakes
-                snowflakes[i] = addElement(config.snowflakeTagName, config.snowContainer, config.snowflakeClassName);
+        if(config.enable) {
+            if(prefersReducedMotion.matches) { // if user prefers reduced motion
+                console.log("User prefers reduced motion - snow.js was disabled.");
+                config.enable = false;
+                return;
+            }
+
+            if(snowflakes == 0) { // if not already initialized
+                for (var i = 0; i < config.maxSnow; i++) {
+                    // create and index snowflakes
+                    snowflakes[i] = addElement(config.snowflakeTagName, config.snowContainer, config.snowflakeClassName);
+                }
+
+                for (var i = 0; i < config.maxSnow; i++) {
+                    snowflakes[i].top = 0 + config.offsetTop + -snowRound(snowRandom(config.initialYSpacing));
+                }
+
+                // snow tick //
+                window.setInterval(function () {
+                    if(!config.enable) {
+                        return; // Don't calculate snow - either disabled by config or user prefers reduced motion
+                    }
+
+                    for (var i = 0; i < snowflakes.length; i++) {
+                        tpSnowFlake(snowflakes[i]);
+                    }
+                }, config.tickTime);
             }
 
             for (var i = 0; i < config.maxSnow; i++) {
-                snowflakes[i].top = 0 + config.offsetTop + -snowRound(snowRandom(config.initialYSpacing));
+                snowflakes[i].left = snowRound((window.innerWidth / config.maxSnow) * i); // set initial position left
             }
-
-            window.setInterval(function () {
-                if(prefersReducedMotion.matches) {
-                    return; // Don't calculate snow - It's hidden because the user prefers reduced motion
-                }
-
-                for (var i = 0; i < snowflakes.length; i++) {
-                    tpSnowFlake(snowflakes[i]);
-                }
-            }, config.tickTime);
-        }
-
-        for (var i = 0; i < config.maxSnow; i++) {
-            snowflakes[i].left = snowRound((window.innerWidth / config.maxSnow) * i); // set initial position left
+        } else {
+            // snow is disabled by config
         }
     }
 
@@ -186,6 +198,11 @@
     });
 
     prefersReducedMotion.addEventListener("change",function() {
+        if(prefersReducedMotion.matches) {
+            config.enable = false;
+        } else {
+            config.enable = true;
+        }
         initSnow();
     });
 })();
