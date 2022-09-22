@@ -1,41 +1,41 @@
-// snow.js 2.0-dev by Maingron (https://maingron.com/snowjs)
+// snow.js 2.0.0-dev by Maingron (https://maingron.com/snowjs)
 // Licensed under MIT (https://github.com/Maingron/snow.js/blob/master/LICENSE)
 
-// Snow.js is a JavaScript library for creating snow effects on web pages.
+// Snow.js is a standalone JavaScript library for creating snow effects on web pages.
 // It is designed to be lightweight and easy to use.
 
-// snow.js config object
 
 (function() {
+    // CONFIGURATION //
     const config = {
         // Basic settings
-        snowChars: ["*"],
-        snowOpacity: 0.75,
-        tickTime: (1000/60), // ms - time between render steps - low values might show varying results in different browsers
-        maxSnow: window.innerHeight / 8, // Max amount of snowflakes
-        jitterAmount: 2,
-        gravityAmount: 3,
-        initialYSpacing: -window.innerHeight - 200, // px - -window.innerHeight makes the snowflakes spawn across the entire screen so they don't need to fall from the top first
-        offsetTop: -100, //px
-        offsetBottom: 100, //px
-        snowSizes: ["20px","25px","35px","40px"],
-        snowColors: ["#fff","#fff","#edf"],
-        snowFont: "inherit", // CSS - Uses the same font as the parent container by default - alternative example: "'Tahoma', 'Arial', sans-serif"
+        snowChars: ["*"], // [array] Characters to use for snowflakes (default:["*"]) (e.g. ["*", "❅", "❆"])
+        snowOpacity: 0.75, // [number 0-1] Opacity of snowflakes (default:0.75) (0 = transparent, 1 = opaque)
+        tickTime: (1000/60), // [number] Time between each tick in milliseconds (default: 1000/60) (higher = slower) (1000/60 = 60fps; 1000/30 = 30fps)
+        maxSnow: window.innerHeight / 8, // [number] Maximum number of snowflakes to render at once (default: window.innerHeight / 8)
+        jitterAmount: 2, // [number] Amount of jitter to apply to snowflakes each tick (default: 2)
+        gravityAmount: 3, // [number] Amount of gravity to apply to snowflakes each tick (default: 3)
+        initialYSpacing: -window.innerHeight - 200, // [number] Initial Y spacing in px for snowflakes (default: -window.innerHeight - 200) "-window.innerHeight" makes the snowflakes spawn across the entire screen
+        offsetTop: -100, // [number] Offset top in px for snowflakes (default: -100)
+        offsetBottom: 100, // [number] Offset bottom in px for snowflakes (default: 100)
+        snowSizes: ["20px","25px","35px","40px"], // [array] Sizes of snowflakes (default: ["20px","25px","35px","40px"])
+        snowColors: ["#fff","#fff","#edf"], // [array] Colors of snowflakes (default: ["#fff","#fff","#edf"])
+        snowFont: "inherit", // [string] (CSS) Font of snowflakes (default: "inherit") (e.g. "Arial", "Times New Roman", sans-serif)
     
-        // Advanced settings
-        snowContainer: document.body,
-        cssTransition: 0, // seconds; not recommended
-        autoFixScriptTag: false, // Recommended: true. If true, make sure the snow.js file is called snow.js or snow.min.js. Might not have a big effect.
-        maxDecimalLength: 1, // 0.123456789
-        snowflakeTagName: "i",
-        snowflakeClassName:"s"
+        // Advanced and experimental settings
+        snowContainer: document.body, // [object] Container to render snowflakes in (default: document.body)
+        cssTransition: 0, // [number] CSS transition time in seconds (default: 0) (0 = no transition)
+        autoFixScriptTag: false, // [boolean] Automatically fix some script tag attributes (default: false) 
+        maxDecimalLength: 1, // [number] Maximum decimal length for snowflake positions (default: 1) (higher = more accurate but slower) (0.123456789)
+        snowflakeTagName: "i", // [string] Tag name of snowflakes (default: "i") (e.g. "i", "span", "div") (shorter tags are recommended)
+        snowflakeClassName:"s" // [string] Class name of snowflakes (default: "s") (e.g. "s", "snowflake", "snow") (shorter class names are recommended)
     };
 
 
 
-    var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)"); // check if user prefers reduced motion
+    let prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)"); // check if user prefers reduced motion
 
-    var snowflakes = [];
+    let snowflakes = [];
 
     if(config.autoFixScriptTag) {
         var scriptElementsOnPage = document.getElementsByTagName("script");
