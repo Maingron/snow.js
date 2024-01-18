@@ -30,6 +30,10 @@ If you want to modify the snow, you can do that by modifying the config section 
 ## Documentation
 You can find the documentation on https://github.com/Maingron/snow.js/wiki
 
+## Screenshots
+![Screenshot](screenshots/screenshot_2_desktop.png)
+![Screenshot](screenshots/screenshot_1_mobile.png)
+
 
 
 ---
