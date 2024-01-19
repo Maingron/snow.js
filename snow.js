@@ -158,6 +158,8 @@
             for (var i = 0; i < config.maxSnow; i++) {
                 snowflakes[i].left = snowRound((window.innerWidth / config.maxSnow) * i); // set initial position left
             }
+
+            tickSnow(); // Initial tick - reduces waiting time for snow to appear
         } else {
             // snow is disabled by config
         }
