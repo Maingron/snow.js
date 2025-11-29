@@ -62,8 +62,12 @@
 		"newyear": {
 			snowChars: ["*","*","*","*",new Date().getFullYear()],
 			snowOpacity: 0.75,
-			jitterAmount: .5,
+			windAmount: -1,
+			jitterAmount: 10,
+			jitterProbability: .1,
 			gravityAmount: -30,
+			gravityJitterAmount: 10,
+			gravityJitterProbability: .2,
 			maxSnow: 30,
 			snowColors: ["purple","red","green","blue","yellow"],
 		},
