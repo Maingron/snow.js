@@ -16,6 +16,7 @@
 		tickTime: (1000/60), // [number] Time between each tick in milliseconds (default: 1000/60) (higher = slower) (1000/60 = 60fps; 1000/30 = 30fps)
 		maxSnow: window.innerHeight / 8, // [number] Maximum number of snowflakes to render at once (default: window.innerHeight / 8)
 		jitterAmount: 2, // [number] Amount of jitter to apply to snowflakes each tick (default: 2)
+		jitterProbability: .8, // [number 0-1] Probability of jitter being applied to each snowflake each tick (default: 0.8) (0 = never, 1 = always)
 		gravityAmount: 3, // [number] Amount of gravity to apply to snowflakes each tick (default: 3)
 		initialYSpacing: -window.innerHeight - 200, // [number] Initial Y spacing in px for snowflakes (default: -window.innerHeight - 200) "-window.innerHeight" makes the snowflakes spawn across the entire screen
 		offsetTop: -100, // [number] Offset top in px for snowflakes (default: -100)
@@ -176,10 +177,13 @@
 
 			// Do gravity
 			which.top += snowRound(snowRandom(config.gravityAmount));
-			which.style.top = which.top + "px";
 	
 			// Do jitter
-			which.left += snowRound(snowRandom(config.jitterAmount)) - (config.jitterAmount / 2);
+			if(Math.random() < config.jitterProbability) {
+				which.left += snowRound(snowRandom(config.jitterAmount)) - (config.jitterAmount / 2);
+			}
+
+			which.style.top = which.top + "px";
 			which.style.left = which.left + "px";
 		}
 	}
