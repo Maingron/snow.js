@@ -1,0 +1,9 @@
+/* PROJECT */
+    GitHub: https://github.com/Maingron/snow.js
+
+/* TEAM */
+    Developer: Maingron (Robin)
+    GitHub: https://github.com/Maingron
+    Website: https://maingron.com
+
+/* CONTRIBUTORS */
