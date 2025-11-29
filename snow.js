@@ -226,24 +226,24 @@
 	}
 
 
-	// function tpSnowFlake
 	// Teleports snowflakes to the other end of the screen if they are out of bounds
-	// we do this like this to have a more efficient tick function - the gravity won't ever change
-	if(config.gravityAmount < 0) { // if gravity is negative
-		function tpSnowFlake(which) {
+	function tpSnowFlake(which) {
+		if(config.gravityAmount < 0) { // if gravity is negative
 			if (which.top < 0 + config.offsetTop) {
 				which.top = window.innerHeight + config.offsetBottom;
 			}
-		}
-	} else { // if gravity is positive
-		function tpSnowFlake(which) {
+		} else {
 			if(which.top > window.innerHeight + config.offsetBottom) {
 				which.top = 0 + config.offsetTop;
 			}
 		}
+
+		if(which.left < 0) {
+			which.left = window.innerWidth;
+		} else if(which.left > window.innerWidth) {
+			which.left = 0;
+		}
 	}
-
-
 
 	// add event listeners
 
