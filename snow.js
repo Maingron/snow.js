@@ -73,6 +73,30 @@
 			jitterAmount: 2,
 			gravityAmount: 3,
 			snowColors: ["#ccc","#fff","#edf"]
+		},
+		"snowy1": {
+			snowChars: ["❅", "❆", "❄", "*"],
+			snowOpacity: 0.75,
+			gravityAmount: 3,
+			snowColors: ["#ccc","#fff","#edf"],
+			jitterAmount: 2,
+			jitterProbability: .5,
+			windAmount: .25,
+			gravityAmount: -1,
+			gravityJitterAmount: 4,
+			gravityJitterProbability: .9,
+		},
+		"butterfly": {
+			snowChars: ["🦋"],
+			snowOpacity: 0.85,
+			jitterAmount: 5,
+			gravityAmount: 2,
+			gravityJitterAmount: -12,
+			gravityJitterProbability: .7,
+			snowSizes: ["30px","40px","50px","60px","70px"],
+			snowColors: ["#ffb6c1"],
+			maxSnow: 50,
+			windAmount: 0
 		}
 	};
 
