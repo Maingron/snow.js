@@ -13,7 +13,6 @@
 Development started on <time>2019-11-05</time>.
 
 
-
 ## Installing
 To implement Snow.js onto a website, go to the end of your HTML and include it via a \<script\>-tag.
 
@@ -38,4 +37,4 @@ You can find the documentation on https://github.com/Maingron/snow.js/wiki
 
 ---
 Project Website: https://maingron.com/snowjs  
-Github Site: https://maingron.com/github/snowjs
+Github Site: https://github.com/Maingron/snow.js
