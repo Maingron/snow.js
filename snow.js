@@ -236,14 +236,10 @@
 
 	// Teleports snowflakes to the other end of the screen if they are out of bounds
 	function tpSnowFlake(which) {
-		if(config.gravityAmount < 0) { // if gravity is negative
-			if (which.top < 0 + config.offsetTop) {
-				which.top = window.innerHeight + config.offsetBottom;
-			}
-		} else {
-			if(which.top > window.innerHeight + config.offsetBottom) {
-				which.top = 0 + config.offsetTop;
-			}
+		if (which.top < 0 + config.offsetTop) {
+			which.top = window.innerHeight + config.offsetBottom;
+		} else if(which.top > window.innerHeight + config.offsetBottom) {
+			which.top = 0 + config.offsetTop;
 		}
 
 		if(which.left < 0 - config.overscanX) {
