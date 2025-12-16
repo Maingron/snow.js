@@ -59,6 +59,7 @@ There is currently no public JS API (no exported function) - configuration is fi
 - `snowSizes` (array of CSS sizes): Font sizes for flakes. Default: `["20px","25px","35px","40px"]`.
 - `snowColors` (array of CSS colors): Colors for flakes. Default: `["#ccc","#fff","#edf"]`.
 - `snowFont` (string, CSS font-family): Font used for flakes. Default: `"inherit"`.
+- `hideSnowflakesOnPrint` (boolean): Hide snowflakes when printing the page. Default: `true`.
 
 ### Advanced / experimental settings
 - `cssTransition` (number seconds): Applies a CSS `transition` on flakes. Default: `0`.
@@ -93,6 +94,9 @@ To test locally, open the file in a browser, or serve the repo with any static s
 Snow.js hides the effect when the user has enabled reduced motion:
 - CSS: `@media (prefers-reduced-motion: reduce) { .<snowflakeClassName> { display: none; } }`
 - JS: the script disables itself when `prefers-reduced-motion: reduce` matches.
+
+Printing behavior:
+- If `hideSnowflakesOnPrint` is enabled (default: `true`), snowflakes are hidden when printing the page (via print styles). This avoids cluttering printed pages with decorative particles.
 
 ## Troubleshooting
 - **No snow appears**: confirm the script path is correct and that `config.enable` is `true`.

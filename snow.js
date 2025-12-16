@@ -27,6 +27,7 @@
 		snowSizes: ["20px","25px","35px","40px"], // [array] Sizes of snowflakes (default: ["20px","25px","35px","40px"])
 		snowColors: ["#ccc","#fff","#edf"], // [array] Colors of snowflakes (default: ["#ccc","#fff","#edf"])
 		snowFont: "inherit", // [string] (CSS) Font of snowflakes (default: "inherit") (e.g. "Arial", "Times New Roman", sans-serif)
+		hideSnowflakesOnPrint: true, // [boolean] Hide snowflakes when printing the page (default: true)
 	
 		// Advanced and experimental settings
 		snowContainer: document.body, // [object] Container to render snowflakes in (default: document.body)
@@ -159,12 +160,21 @@
 				pointer-events: none;
 			}
 
-			@media(prefers-reduced-motion:reduce) {
+			@media (prefers-reduced-motion:reduce) {
 				.${config.snowflakeClassName} {
 					display:none;
 				}
 			}
 		`;
+		if(config.hideSnowflakesOnPrint) {
+			el.textContent += `
+			@media print {
+				.${config.snowflakeClassName} {
+					display:none;
+				}
+			}
+			`;
+		}
 	});
 
 	// Functions
