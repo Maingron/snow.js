@@ -13,7 +13,6 @@
 		preset : "none", // [string] Preset (default: "none")
 		snowChars: ["*"], // [array] Characters to use for snowflakes (default:["*"]) (e.g. ["*", "❅", "❆"])
 		snowOpacity: 0.75, // [number 0-1] Opacity of snowflakes (default:0.75) (0 = transparent, 1 = opaque)
-		tickTime: (1000/60), // [number] Time between each tick in milliseconds (default: 1000/60) (higher = slower) (1000/60 = 60fps; 1000/30 = 30fps)
 		maxSnow: window.innerHeight / 8, // [number] Maximum number of snowflakes to render at once (default: window.innerHeight / 8)
 		jitterAmount: 2, // [number] Amount of jitter to apply to snowflakes each tick (default: 2)
 		jitterProbability: .8, // [number 0-1] Probability of jitter being applied to each snowflake each tick (default: 0.8) (0 = never, 1 = always)
@@ -35,11 +34,12 @@
 		autoFixScriptTag: false, // [boolean] Automatically fix some script tag attributes (default: false) 
 		maxDecimalLength: 1, // [number] Maximum decimal length for snowflake positions (default: 1) (higher = more accurate but slower) (0.123456789)
 		snowflakeTagName: "i", // [string] Tag name of snowflakes (default: "i") (e.g. "i", "span", "div") (shorter tags are recommended)
-		snowflakeClassName:"s" // [string] Class name of snowflakes (default: "s") (e.g. "s", "snowflake", "snow") (shorter class names are recommended)
+		snowflakeClassName:"s", // [string] Class name of snowflakes (default: "s") (e.g. "s", "snowflake", "snow") (shorter class names are recommended)
+		targetFPS: 60 // [number] should be set to 60, maybe 30. Don't change to a higher value! Affects snow speed. Note the actual framerate will match the user's monitor (default: 60)
 	};
 
 	// PRESETS //
-	let presets = {
+	const presets = {
 		"none": {},
 		"halloween": {
 			snowChars: ["🎃", "👻", "🎃", "👻", "🦇", "🧟", "🧛"],
@@ -104,11 +104,15 @@
 		}
 	};
 
+	
 	let prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)"); // check if user prefers reduced motion
-
+	
 	let snowflakes = [];
+	
+	let lastRequestFrame = 0;
+	let avgActualFPS = 30;
 
-	if(config.preset !== "none") {
+	if(config.preset !== "none" && presets[config.preset]) {
 		config = Object.assign(config, presets[config.preset]);
 	}
 
@@ -137,70 +141,79 @@
 	// style snow
 
 	addElement("style", document.body, "snowstyle");
-	document.getElementsByClassName("snowstyle")[0].innerHTML = `
-		.${config.snowflakeClassName} {
-			position:fixed;
-			display:inline;
-			height:0;
-			width:0;
-			overflow:visible;
-			top:-50px;
-			font-family: ${config.snowFont};
-			transition : ${config.cssTransition}s;
-			opacity: ${config.snowOpacity};
-			font-style: normal;
-			pointer-events: none;
-		}
 
-		@media(prefers-reduced-motion:reduce) {
+	document.querySelectorAll(".snowstyle").forEach(el => {
+		el.type = "text/css";
+		el.textContent = `
 			.${config.snowflakeClassName} {
-				display:none;
+				position:fixed;
+				display:inline;
+				height:0;
+				width:0;
+				overflow:visible;
+				top:-50px;
+				font-family: ${config.snowFont};
+				transition : ${config.cssTransition}s;
+				opacity: ${config.snowOpacity};
+				font-style: normal;
+				pointer-events: none;
 			}
-		}
-	`;
 
-
+			@media(prefers-reduced-motion:reduce) {
+				.${config.snowflakeClassName} {
+					display:none;
+				}
+			}
+		`;
+	});
 
 	// Functions
 
-
 	function initSnow(repositionOnly = false) {
-		if(config.enable) {
-			if(prefersReducedMotion.matches) { // if user prefers reduced motion
-				console.log("User prefers reduced motion - snow.js was disabled.");
-				config.enable = false;
-				return;
-			}
-
-			if(repositionOnly && snowflakes) {
-				window.setTimeout(function() {
-					for (let i = 0; i < config.maxSnow; i++) {
-						snowflakes[i].left = 0 - config.overscanX + snowRound(((window.innerWidth + config.overscanX) / config.maxSnow) * i);
-					}
-				}, 0);
-
-				return;
-			}
-
-			if(snowflakes == 0) { // if not already initialized
-				for (var i = 0; i < config.maxSnow; i++) {
-					// create and index snowflakes
-					snowflakes[i] = addElement(config.snowflakeTagName, config.snowContainer, config.snowflakeClassName);
-					snowflakes[i].top = 0 + config.offsetTop + -snowRound(snowRandom(config.initialYSpacing));
-					snowflakes[i].left = 0 - config.overscanX + snowRound(((window.innerWidth + config.overscanX) / config.maxSnow) * i); // set initial position left
-				}
-
-				// snow tick //
-				window.setInterval(function () {
-					tickSnow();
-				}, config.tickTime);
-			}
-
+		if(!config.enable) {
+			return;
+		} else if(prefersReducedMotion.matches) { // if user prefers reduced motion
+			console.log("User prefers reduced motion - snow.js was disabled.");
+			config.enable = false;
+			return;
 		}
+
+		if(repositionOnly && snowflakes) {
+			window.setTimeout(function() {
+				for (let i = 0; i < config.maxSnow; i++) {
+					snowflakes[i].left = 0 - config.overscanX + snowRound(((window.innerWidth + config.overscanX) / config.maxSnow) * i);
+				}
+			}, 0);
+
+			return;
+		}
+
+		if(snowflakes == 0) { // if not already initialized
+			for (let i = 0; i < config.maxSnow; i++) {
+				// create and index snowflakes
+				snowflakes[i] = addElement(config.snowflakeTagName, config.snowContainer, config.snowflakeClassName);
+				snowflakes[i].top = 0 + config.offsetTop + -snowRound(snowRandom(config.initialYSpacing));
+				snowflakes[i].left = 0 - config.overscanX + snowRound(((window.innerWidth + config.overscanX) / config.maxSnow) * i); // set initial position left
+			}
+
+			// snow tick //
+			requestAnimationFrame(tickSnow);
+		}
+
 	}
 
 	function tickSnow() {
-		if(!config.enable) {
+		const dateNow = Date.now();
+		avgActualFPS = 0.9 * avgActualFPS + 0.1 * Math.abs((1000 / (dateNow - lastRequestFrame)));
+		if(avgActualFPS < .5 || avgActualFPS == Infinity) {
+			avgActualFPS = 60;
+		}
+		lastRequestFrame = dateNow;
+		const frameTimeBias = config.targetFPS / avgActualFPS;
+
+		requestAnimationFrame(tickSnow);
+
+		if(!config.enable || document?.hidden) {
 			return; // Don't calculate snow - either disabled by config or user prefers reduced motion
 		}
 
@@ -210,17 +223,17 @@
 
 			// Do gravity´
 			if(Math.random() < config.gravityJitterProbability) {
-				which.top += snowRound(config.gravityAmount + snowRandom(config.gravityJitterAmount));
+				which.top += snowRound(frameTimeBias * (config.gravityAmount + snowRandom(config.gravityJitterAmount)));
 			} else {
-				which.top += snowRound(config.gravityAmount);
+				which.top += snowRound(frameTimeBias * config.gravityAmount);
 			}
 
 			// Do wind
-			which.left += snowRound(config.windAmount);
+			which.left += snowRound(frameTimeBias * config.windAmount);
 	
 			// Do jitter
 			if(Math.random() < config.jitterProbability) {
-				which.left += snowRound(snowRandom(config.jitterAmount)) - (config.jitterAmount / 2);
+				which.left += snowRound(frameTimeBias * (snowRandom(config.jitterAmount) - (config.jitterAmount / 2)));
 			}
 
 			which.style.top = which.top + "px";
