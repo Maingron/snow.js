@@ -45,7 +45,6 @@ There is currently no public JS API (no exported function) - configuration is fi
 - `preset` (string): Preset name. Default: `"none"`.
 - `snowChars` (array of strings): Characters used as flakes/particles. Default: `["*"]`.
 - `snowOpacity` (number $0..1$): Opacity. Default: `0.75`.
-- `tickTime` (number ms): Tick interval in milliseconds. Default: `1000/60`.
 - `maxSnow` (number): Maximum number of flakes. Default: `window.innerHeight / 8`.
 - `jitterAmount` (number): Horizontal jitter strength. Default: `2`.
 - `jitterProbability` (number $0..1$): Probability jitter applies each tick. Default: `0.8`.
@@ -67,6 +66,7 @@ There is currently no public JS API (no exported function) - configuration is fi
 - `maxDecimalLength` (number): Decimal precision used for positions. Default: `1`.
 - `snowflakeTagName` (string): Tag name for flakes. Default: `"i"`.
 - `snowflakeClassName` (string): Class name for flakes. Default: `"s"`.
+- `targetFPS` (number): Should be set to `60`, maybe `30`. Don't change to a higher value! Affects snow speed. Note the actual framerate will match the user's monitor. Default: `60`.
 
 Notes:
 - The config includes `snowContainer`, but the current implementation appends flakes to `document.body` internally.
@@ -97,7 +97,6 @@ Snow.js hides the effect when the user has enabled reduced motion:
 ## Troubleshooting
 - **No snow appears**: confirm the script path is correct and that `config.enable` is `true`.
 - **Nothing shows on some devices**: check whether `prefers-reduced-motion` is enabled.
-- **Too many flakes / high CPU**: lower `maxSnow`, increase `tickTime`, or reduce `maxDecimalLength`.
 - **Characters look wrong**: set `snowFont` to a font that supports your chosen emojis/symbols.
 
 ## Screenshots
